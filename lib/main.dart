@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
         title: 'Namer App',
         theme: ThemeData(
           useMaterial3: true,
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightBlue),
         ),
         home: MyHomePage(),
       ),
@@ -35,8 +35,7 @@ class MyApp extends StatelessWidget {
 class MyAppState extends ChangeNotifier {
   var current = WordPair.random();
 
-
-  void nextGen(){
+  void nextGen() {
     current = WordPair.random();
     notifyListeners();
   }
@@ -46,13 +45,14 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
+    var pair = appState.current;
 
     return Scaffold(
       body: Column(
         children: [
           Text('A random interesting idea:'),
-          Text(appState.current.asLowerCase),
-                    ElevatedButton(
+          BigCard(pair: pair),
+          ElevatedButton(
             onPressed: () {
               appState.nextGen();
               print('button pressed!');
@@ -60,6 +60,39 @@ class MyHomePage extends StatelessWidget {
             child: Text('Next'),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class BigCard extends StatelessWidget {
+  const BigCard({
+    super.key,
+    required this.pair,
+  });
+
+  final WordPair pair;
+
+  @override
+  Widget build(BuildContext context) {
+    // ----GET ME THE CURRENT THEME
+    final theme = Theme.of(context);
+
+    // -----STYLE FOR TEXT displayMedium is(display typeface
+    // Calling copyWith() on displayMedium returns a copy of the 
+    // text style with the changes you define. In this case, 
+    //you're only changing the text's color.
+    final style = theme.textTheme.displayMedium!.copyWith(
+      color: theme.colorScheme.onPrimary
+    );
+    
+    // ----CARD IS AN ACTUAL EXT WIDGET
+    return Card(
+      // -----
+      color: theme.colorScheme.primary,
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Text(pair.asLowerCase, style:style),
       ),
     );
   }
