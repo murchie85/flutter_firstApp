@@ -2,6 +2,13 @@ import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+/*
+MAIN runs MYAPP
+MYAPP has a MYAppState() context
+MYAppState ONLY HAS ONE VAR current
+
+
+*/
 void main() {
   runApp(MyApp());
 }
@@ -27,6 +34,7 @@ class MyApp extends StatelessWidget {
 
 class MyAppState extends ChangeNotifier {
   var current = WordPair.random();
+  
 }
 
 class MyHomePage extends StatelessWidget {
