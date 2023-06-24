@@ -180,56 +180,6 @@ class GeneratorPage extends StatelessWidget {
   }
 }
 
-// ...
-  @override
-  Widget build(BuildContext context) {
-    var appState = context.watch<MyAppState>();
-    var pair = appState.current;
-    
-    // ICON TYPE
-    IconData icon;
-    if (appState.favourites.contains(pair)) {
-      icon = Icons.favorite;
-    } else {
-      icon = Icons.favorite_border;
-    }
-
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            BigCard(pair: pair),
-            // ---adds a transparent box
-            SizedBox(height: 10),
-            Row(
-              //------dont take up all the horizontal space
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ElevatedButton.icon(
-                  onPressed: () {
-                    appState.toggleFavourite();
-                  },
-                  icon: Icon(icon),
-                  label: Text('like'),
-                ),
-                SizedBox(height: 10,),
-
-
-                ElevatedButton(
-                  
-                  onPressed: () {
-                    appState.nextGen();
-                  },
-                  child: Text('Next'),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
 
 class BigCard extends StatelessWidget {
