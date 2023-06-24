@@ -68,16 +68,99 @@ class MyAppState extends ChangeNotifier {
   }
 }
 
+// ...
+
 class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    return Scaffold(
+      body: Row(
+        children: [
+          SafeArea(
+            child: NavigationRail(
+              extended: false,
+              destinations: [
+                NavigationRailDestination(
+                  icon: Icon(Icons.home),
+                  label: Text('Home'),
+                ),
+                NavigationRailDestination(
+                  icon: Icon(Icons.favorite),
+                  label: Text('Favorites'),
+                ),
+              ],
+              selectedIndex: 0,
+              onDestinationSelected: (value) {
+                print('selected: $value');
+              },
+            ),
+          ),
+          Expanded(
+            child: Container(
+              color: Theme.of(context).colorScheme.primaryContainer,
+              child: GeneratorPage(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
+class GeneratorPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
-    var currentPair = appState.current;
+    var pair = appState.current;
+
+    IconData icon;
+    if (appState.favourites.contains(pair)) {
+      icon = Icons.favorite;
+    } else {
+      icon = Icons.favorite_border;
+    }
+
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          BigCard(pair: pair),
+          SizedBox(height: 10),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ElevatedButton.icon(
+                onPressed: () {
+                  appState.toggleFavourite();
+                },
+                icon: Icon(icon),
+                label: Text('Like'),
+              ),
+              SizedBox(width: 10),
+              ElevatedButton(
+                onPressed: () {
+                  appState.nextGen();
+                },
+                child: Text('Next'),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ...
+  @override
+  Widget build(BuildContext context) {
+    var appState = context.watch<MyAppState>();
+    var pair = appState.current;
     
     // ICON TYPE
     IconData icon;
-
-    if (appState.favourites.contains(currentPair)) {
+    if (appState.favourites.contains(pair)) {
       icon = Icons.favorite;
     } else {
       icon = Icons.favorite_border;
@@ -88,7 +171,7 @@ class MyHomePage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            BigCard(currentPair: currentPair),
+            BigCard(pair: pair),
             // ---adds a transparent box
             SizedBox(height: 10),
             Row(
@@ -119,15 +202,15 @@ class MyHomePage extends StatelessWidget {
       ),
     );
   }
-}
+
 
 class BigCard extends StatelessWidget {
   const BigCard({
     super.key,
-    required this.currentPair,
+    required this.pair,
   });
 
-  final WordPair currentPair;
+  final WordPair pair;
 
   @override
   Widget build(BuildContext context) {
@@ -152,9 +235,9 @@ class BigCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Text(
-          currentPair.asLowerCase, 
+          pair.asLowerCase, 
           style:style,
-          semanticsLabel: "${currentPair.first} ${currentPair.second}",
+          semanticsLabel: "${pair.first} ${pair.second}",
           ),
       ),
     );
